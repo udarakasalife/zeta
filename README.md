@@ -38,7 +38,30 @@ hasilnya).
 
 ## Contoh program
 
-Lihat `index.ze`, `demo.ze`, `db_demo.ze`, `sunda_demo.ze` di repo ini.
+```
+let x = 10
+if x > 5 then
+    print "besar"
+else
+    print "kecil"
+end
+```
+
+```
+import db
+store "nama" = "Dika"
+print fetch "nama"
+```
+
+```
+@lang su
+simpen x = 10
+lamun x > 5 mangka
+    tembongkeun "gede"
+sanes
+    tembongkeun "leutik"
+beres
+```
 
 ## Kontribusi Bahasa (Language Pack)
 
