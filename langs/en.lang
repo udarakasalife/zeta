@@ -1,0 +1,17 @@
+print=print
+let=let
+if=if
+then=then
+else=else
+end=end
+while=while
+do=do
+true=true
+false=false
+and=and
+or=or
+not=not
+import=import
+store=store
+fetch=fetch
+node=node
