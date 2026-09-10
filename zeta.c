@@ -78,7 +78,7 @@ static void init_keywords(void) {
 static void load_lang_file(const char *path) {
     FILE *f = fopen(path, "rb");
     if (!f) {
-        fprintf(stderr, "zeta: gak nemu paket bahasa '%s'\n", path);
+        fprintf(stderr, "zeta: language pack not found '%s'\n", path);
         exit(1);
     }
     char line[256];
@@ -182,7 +182,7 @@ static void lex(Lexer *lx) {
                 else lexer_push(lx, T_GT, NULL, 0);
                 break;
             default:
-                fprintf(stderr, "zeta: karakter tidak dikenal '%c'\n", c);
+                fprintf(stderr, "zeta: unexpected character '%c'\n", c);
                 exit(1);
         }
     }
@@ -231,7 +231,7 @@ static int check(Parser *p, TokenType t) { return cur(p)->type == t; }
 
 static Token *expect(Parser *p, TokenType t, const char *msg) {
     if (!check(p, t)) {
-        fprintf(stderr, "zeta: error, seharusnya ada '%s'\n", msg);
+        fprintf(stderr, "zeta: expected '%s'\n", msg);
         exit(1);
     }
     return advance(p);
@@ -284,7 +284,7 @@ static Node *parse_primary(Parser *p) {
         n->a = parse_primary(p);
         return n;
     }
-    fprintf(stderr, "zeta: ada yang salah di bagian rumus/expression\n");
+    fprintf(stderr, "zeta: invalid expression\n");
     exit(1);
 }
 
@@ -367,7 +367,7 @@ static Node *parse_stmt(Parser *p) {
     }
     if (t->type == T_LET) {
         advance(p);
-        Token *name = expect(p, T_IDENT, "nama variabel");
+        Token *name = expect(p, T_IDENT, "variable name");
         expect(p, T_EQ, "=");
         Node *n = node_new(N_LET);
         n->str = strdup(name->text);
@@ -378,7 +378,7 @@ static Node *parse_stmt(Parser *p) {
     if (t->type == T_WHILE) return parse_while(p);
     if (t->type == T_IMPORT) {
         advance(p);
-        Token *name = expect(p, T_IDENT, "nama modul");
+        Token *name = expect(p, T_IDENT, "module name");
         Node *n = node_new(N_IMPORT);
         n->str = strdup(name->text);
         return n;
@@ -589,7 +589,7 @@ static Value eval_binop(Node *n, Env *env) {
         case T_MINUS: return make_number(l.num - r.num);
         case T_STAR: return make_number(l.num * r.num);
         case T_SLASH:
-            if (r.num == 0) { fprintf(stderr, "zeta: gak bisa bagi dengan nol\n"); exit(1); }
+            if (r.num == 0) { fprintf(stderr, "zeta: division by zero\n"); exit(1); }
             return make_number(l.num / r.num);
         case T_PERCENT: return make_number((double)((long long)l.num % (long long)r.num));
         case T_LT: return make_bool(l.num < r.num);
@@ -605,7 +605,7 @@ static Value eval_binop(Node *n, Env *env) {
         case T_AND: return make_bool(truthy(l) && truthy(r));
         case T_OR: return make_bool(truthy(l) || truthy(r));
         default:
-            fprintf(stderr, "zeta: operator tidak dikenal\n");
+            fprintf(stderr, "zeta: unknown operator\n");
             exit(1);
     }
 }
@@ -617,7 +617,7 @@ static Value eval(Node *n, Env *env) {
         case N_BOOL: return make_bool((int)n->num);
         case N_IDENT: {
             Value *v = env_find(env, n->str);
-            if (!v) { fprintf(stderr, "zeta: variabel '%s' belum pernah dibuat\n", n->str); exit(1); }
+            if (!v) { fprintf(stderr, "zeta: undefined variable '%s'\n", n->str); exit(1); }
             return *v;
         }
         case N_BINOP: return eval_binop(n, env);
@@ -688,20 +688,20 @@ static Value eval(Node *n, Env *env) {
                 (void)rc;
                 remove(path);
             } else {
-                fprintf(stderr, "zeta: gagal siapin file buat node\n");
+                fprintf(stderr, "zeta: failed to create temp file for node\n");
             }
             free(codestr);
             return make_number(0);
         }
         default:
-            fprintf(stderr, "zeta: node tidak dikenal\n");
+            fprintf(stderr, "zeta: unknown node type\n");
             exit(1);
     }
 }
 
 static char *read_file(const char *path) {
     FILE *f = fopen(path, "rb");
-    if (!f) { fprintf(stderr, "zeta: gak bisa buka file '%s'\n", path); exit(1); }
+    if (!f) { fprintf(stderr, "zeta: cannot open file '%s'\n", path); exit(1); }
     fseek(f, 0, SEEK_END);
     long size = ftell(f);
     fseek(f, 0, SEEK_SET);
@@ -726,7 +726,7 @@ static void run_source(const char *src, Env *env) {
 static void repl(void) {
     Env *env = env_new(NULL);
     char line[4096];
-    printf("zeta repl. ctrl+d buat keluar.\n");
+    printf("zeta repl. press ctrl+d to exit.\n");
     for (;;) {
         printf("> ");
         if (!fgets(line, sizeof(line), stdin)) break;

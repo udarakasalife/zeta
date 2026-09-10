@@ -1,56 +1,57 @@
 # Zeta
 
-Bahasa pemrograman kecil, cepat, dan portable. Ditulis dalam C, compile jadi
-satu file binary, jalan tanpa dependency apapun. Sintaksnya sengaja pakai
-kata biasa (bukan simbol kayak `{ }` `;`) biar gampang dibaca.
+A small, fast, portable programming language. Written in C, compiles to a
+single binary, runs with zero dependencies. The syntax is deliberately
+word-based instead of symbol-heavy (no `{ }`, no `;`) to keep it easy to
+read.
 
 ```
 let x = 10
 if x > 5 then
-    print "besar"
+    print "big"
 else
-    print "kecil"
+    print "small"
 end
 ```
 
-## Fitur
+## Features
 
-- Interpreter native (C), compile ke satu binary, bisa didownload dan
-  langsung jalan di sistem manapun tanpa runtime tambahan
-- Sintaks minimalis: `let`, `if/then/else/end`, `while/do/end`
-- Database key-value bawaan (`import db`, `store`, `fetch`), datanya
-  otomatis tersimpan ke file lokal
-- Interop ke Node.js (`node "kode javascript"`)
-- Kata kunci bisa diganti bahasa lain lewat language pack, lihat bagian
-  Kontribusi Bahasa di bawah
+- Native interpreter (C), compiles to one binary — download and run
+  anywhere with no extra runtime
+- Minimal syntax: `let`, `if/then/else/end`, `while/do/end`
+- Built-in key-value database (`import db`, `store`, `fetch`), data
+  persists automatically to a local file
+- Node.js interop (`node "javascript code"`)
+- Keywords can be swapped for another language via language packs — see
+  the Language Contribution section below
 
-## Install & jalanin
+## Build & run
 
-Butuh `gcc` (atau compiler C lain).
+Requires `gcc` (or any C compiler).
 
 ```bash
 gcc -O2 -static -o zeta zeta.c
-./zeta nama_file.ze
+./zeta your_file.ze
 ```
 
-Tanpa argumen, `./zeta` masuk mode REPL (ketik baris kode langsung, lihat
-hasilnya).
+With no arguments, `./zeta` starts a REPL (type a line, see the result
+immediately).
 
-## Contoh program
+## Example programs
 
 ```
 let x = 10
 if x > 5 then
-    print "besar"
+    print "big"
 else
-    print "kecil"
+    print "small"
 end
 ```
 
 ```
 import db
-store "nama" = "Dika"
-print fetch "nama"
+store "name" = "Dika"
+print fetch "name"
 ```
 
 ```
@@ -63,16 +64,16 @@ sanes
 beres
 ```
 
-## Kontribusi Bahasa (Language Pack)
+## Contributing a Language Pack
 
-Zeta bisa dipakai dengan kata kunci dari bahasa apapun. Panduan lengkap ada
-di `LANGS_README.md`. Singkatnya: copy `langs/en.lang`, ganti kata di
-sebelah kanan tanda `=` sesuai bahasa lo, kirim pull request ke folder
+Zeta can run with keywords from any language. Full guide in
+`LANGS_README.md`. Short version: copy `langs/en.lang`, translate the
+right-hand side of each `=`, open a pull request adding your file to
 `langs/`.
 
-Kontributor yang pack bahasanya diterima bakal dicantumkan di
+Contributors whose language pack gets merged are credited in
 `CONTRIBUTORS.md`.
 
-## Lisensi
+## License
 
-MIT License, lihat `LICENSE`. Daftar kontributor ada di `CONTRIBUTORS.md`.
+MIT License, see `LICENSE`. Contributor list in `CONTRIBUTORS.md`.
